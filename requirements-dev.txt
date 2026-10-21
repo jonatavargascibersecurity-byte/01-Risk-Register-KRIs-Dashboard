@@ -1,0 +1,2 @@
+# Development dependencies only - the package itself has zero runtime deps.
+pytest>=8.0
