@@ -40,11 +40,45 @@ python -m riskregister risks --top 10
 python -m riskregister kri
 python -m riskregister report    --out build
 python -m riskregister dashboard --out build
+python -m riskregister challenge --list
+python -m riskregister --out build challenge --scenario risk-triage-thm --show-solution
 ```
 
 Abra `build/dashboard.html` em qualquer navegador.
 
 Sem dependências de terceiros em tempo de execução - apenas a biblioteca padrão do Python.
+
+## Alinhamento com plataformas de estudo
+
+Este repositório é um laboratório de prática para trilhas de GRC e defesa. Cada sala/trilha vira uma melhoria rastreável; o mapeamento completo (plataforma, link, artefato e o que foi resolvido) está em [`PLATFORMS.md`](PLATFORMS.md).
+
+| Plataforma / trilha | Link | Como o repositório aplica |
+|---|---|---|
+| TryHackMe - Governance & Regulation | [sala](https://tryhackme.com/room/cybergovernanceregulation) | Apetite por categoria, priorização por risco residual e relatório orientado a evidências. Cenário `risk-triage-thm`. |
+| TryHackMe - Threats & Risks | [módulo](https://tryhackme.com/module/threats-and-risks) | Ciclo identificar → avaliar → responder → monitorar exercitado no comando `challenge`. |
+| LetsDefend - SOC Manager Path | [trilha](https://app.letsdefend.io/training) | Triage e escalonamento viram perguntas de KRI no cenário `kri-monitoring-letsdefend`. |
+| HTB Academy - SOC Analyst Path | [trilha](https://academy.hackthebox.com/path/preview/soc-analyst) | Estrutura de relatório com evidências e KRIs operacionais. |
+| HTB - Governance & Compliance | [recursos](https://www.hackthebox.com/cybersecurity-resources/governance_compliance) | DORA/NIST CSF 2.0 no catálogo de controles e no crosswalk do repositório 02. |
+
+### Modo desafio
+
+```bash
+python -m riskregister challenge --list
+python -m riskregister challenge --scenario risk-triage-thm
+python -m riskregister --out build challenge --scenario risk-triage-thm --show-solution
+```
+
+As respostas são calculadas do próprio CSV (`data/risks.csv`, `data/kris.csv`), então o exercício nunca divergiu do registro.
+
+### Ingestão de achados de laboratório
+
+Copie `labs/findings.sample.csv` para `labs/findings.csv`, registre uma linha por sala e rode:
+
+```bash
+python -m riskregister --out build ingest --source labs/findings.csv
+```
+
+O comando valida se o `risk_id` existe e gera `build/lab-findings.md` com o link da sala, o risco e **como o problema foi resolvido**. Use o template em [`learning-log/000-template.md`](learning-log/000-template.md) para o write-up.
 
 ## Layout do repositório
 
@@ -61,7 +95,12 @@ Sem dependências de terceiros em tempo de execução - apenas a biblioteca padr
 │   ├── registry.py          # carga, validação, gravação
 │   ├── report.py            # relatório executivo em Markdown
 │   ├── dashboard.py         # dashboard HTML autocontido (SVG inline)
+│   ├── challenge.py         # cenários jogáveis (respostas calculadas do CSV)
+│   ├── ingest.py            # achados de laboratório -> registro de riscos
 │   └── cli.py               # interface de linha de comando
+├── scenarios/               # cenários JSON com link da plataforma
+├── labs/                    # findings.sample.csv (copie para findings.csv)
+├── learning-log/            # template de write-up por sala/trilha
 ├── tests/                   # testes unitários + de integração
 └── build/                   # artefatos gerados (ignorados pelo git)
 ```

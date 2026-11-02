@@ -1,0 +1,47 @@
+{
+  "id": "risk-triage-thm",
+  "title": "Triagem de riscos: apetite, residual e KRI",
+  "platform": "TryHackMe",
+  "path": "Threats and Risks -> Risk Management",
+  "url": "https://tryhackme.com/module/threats-and-risks",
+  "briefing": "Voce entrou como analista de risco da Meridian Pay. O comite pediu uma triagem rapida antes da reuniao mensal. Use o registro de riscos e o conjunto de KRIs para responder. Todas as respostas sao calculadas a partir de `data/*.csv` - nao ha gabarito fixo.",
+  "questions": [
+    {
+      "id": "Q1",
+      "type": "top_residual",
+      "prompt": "Entre R-001, R-002 e R-011, qual exige atencao primeiro pelo risco RESIDUAL?",
+      "risks": ["R-001", "R-002", "R-011"]
+    },
+    {
+      "id": "Q2",
+      "type": "above_appetite",
+      "prompt": "Quais riscos da categoria 'Dados e Privacidade' estao ACIMA do apetite aprovado? (IDs separados por virgula, ou NENHUM)",
+      "category": "Dados e Privacidade"
+    },
+    {
+      "id": "Q3",
+      "type": "kri_status",
+      "prompt": "Qual o status do KRI-02 (MTTD de fraude) contra os thresholds? (Verde/Amarelo/Vermelho)",
+      "kri": "KRI-02"
+    },
+    {
+      "id": "Q4",
+      "type": "reduction",
+      "prompt": "Qual o percentual de reducao do risco R-002 (inerente -> residual)? Ex.: 40 ou 40.0",
+      "risks": ["R-002"]
+    },
+    {
+      "id": "Q5",
+      "type": "level",
+      "prompt": "Qual a faixa de severidade para probabilidade 4 x impacto 4?",
+      "likelihood": 4,
+      "impact": 4
+    },
+    {
+      "id": "Q6",
+      "type": "order",
+      "prompt": "Ordene R-001, R-002 e R-011 do maior para o menor risco residual (formato R-001>R-002>R-003).",
+      "risks": ["R-001", "R-002", "R-011"]
+    }
+  ]
+}

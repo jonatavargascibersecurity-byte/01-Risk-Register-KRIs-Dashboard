@@ -17,7 +17,18 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .challenge import (
+    batch_answers,
+    build_result_markdown,
+    explain,
+    find_scenario,
+    is_correct,
+    load_scenarios,
+    run_scenario,
+    solve,
+)
 from .dashboard import write_dashboard
+from .ingest import build_ingest_markdown, load_lab_findings, validate_findings
 from .models import KRI, Risk
 from .registry import DataError, load_registry
 from .report import build_report
@@ -159,6 +170,103 @@ def cmd_dashboard(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_challenge(args: argparse.Namespace) -> int:
+    registry = load_registry(args.data)
+    try:
+        scenarios = load_scenarios(args.scenarios)
+    except FileNotFoundError as exc:
+        print(f"scenario error: {exc}", file=sys.stderr)
+        return 2
+
+    if args.list or not args.scenario:
+        print("Available challenges")
+        print("-" * 68)
+        for scenario in scenarios:
+            print(f"  {scenario.id:<28} {scenario.title}")
+            print(f"  {'':<28} {scenario.platform} | {scenario.path}")
+            print(f"  {'':<28} {scenario.url} ({len(scenario.questions)} questions)")
+        print("")
+        print("Run one with: python -m riskregister challenge --scenario <id>")
+        return 0
+
+    scenario = find_scenario(scenarios, args.scenario)
+    print("=" * 68)
+    print(scenario.title)
+    print("=" * 68)
+    print(f"Source: {scenario.platform} - {scenario.path}")
+    print(scenario.url)
+    print("")
+    if scenario.briefing:
+        print(scenario.briefing)
+        print("")
+
+    if args.show_solution:
+        for question in scenario.questions:
+            print(f"{question.id}: {question.prompt}")
+            print(f"  answer: {solve(registry, question)}")
+            print(f"  why   : {explain(registry, question)}")
+        return 0
+
+    out = Path(args.out) / f"challenge-{scenario.id}.md"
+    out.parent.mkdir(parents=True, exist_ok=True)
+
+    if args.answers:
+        answers = batch_answers(scenario, args.answers)
+        markdown = build_result_markdown(registry, scenario, answers)
+        correct = sum(
+            1
+            for question in scenario.questions
+            if is_correct(solve(registry, question), answers.get(question.id, ""))
+        )
+        for question in scenario.questions:
+            expected = solve(registry, question)
+            given = answers.get(question.id, "")
+            mark = "OK" if is_correct(expected, given) else "X"
+            print(f"[{mark}] {question.id}: expected {expected} | got {given or '-'}")
+    else:
+        correct, lines = run_scenario(registry, scenario)
+        markdown = "\n".join(lines)
+
+    out.write_text(markdown, encoding="utf-8")
+    print("")
+    print(f"Score: {correct}/{len(scenario.questions)}")
+    print(f"Result written: {out}")
+    return 0 if correct == len(scenario.questions) else 1
+
+
+def cmd_ingest(args: argparse.Namespace) -> int:
+    registry = load_registry(args.data)
+    try:
+        findings = load_lab_findings(args.source)
+    except FileNotFoundError as exc:
+        print(f"ingest error: {exc}", file=sys.stderr)
+        return 2
+
+    issues = validate_findings(findings, registry)
+    if issues:
+        print(f"{len(issues)} ingest issue(s):")
+        for index, issue in enumerate(issues, 1):
+            print(f"  {index:>2}. {issue}")
+        return 1
+
+    out = Path(args.out) / "lab-findings.md"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(build_ingest_markdown(findings, registry), encoding="utf-8")
+
+    print("ID      DATE        PLATFORM      RISK    SEVERITY")
+    print("-" * 60)
+    for finding in sorted(findings, key=lambda f: (f.date, f.finding_id)):
+        print(
+            f"{finding.finding_id:<8}{finding.date:<12}{finding.platform:<14}"
+            f"{finding.risk_id:<8}{finding.severity}"
+        )
+    print("")
+    print(f"findings ingested: {len(findings)}")
+    print(f"linked risks    : {len({f.risk_id for f in findings})}")
+    print(f"report written  : {out}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="riskregister",
@@ -201,6 +309,34 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("dashboard", help="write the HTML dashboard").set_defaults(
         func=cmd_dashboard
     )
+
+    challenge_parser = subparsers.add_parser(
+        "challenge", help="list or play a risk-triage challenge"
+    )
+    challenge_parser.add_argument("--scenario", default=None, help="scenario id to play")
+    challenge_parser.add_argument("--list", action="store_true", help="list scenarios")
+    challenge_parser.add_argument(
+        "--scenarios", default="scenarios", help="directory with scenario JSON files"
+    )
+    challenge_parser.add_argument(
+        "--answers",
+        default=None,
+        help="batch answers, e.g. 'Q1=R-002;Q2=R-002,R-013' (skips interactive mode)",
+    )
+    challenge_parser.add_argument(
+        "--show-solution", action="store_true", help="print answers and reasoning"
+    )
+    challenge_parser.set_defaults(func=cmd_challenge)
+
+    ingest_parser = subparsers.add_parser(
+        "ingest", help="validate and render lab findings linked to risks"
+    )
+    ingest_parser.add_argument(
+        "--source",
+        default="labs/findings.csv",
+        help="lab findings CSV (default: labs/findings.csv; copy findings.sample.csv)",
+    )
+    ingest_parser.set_defaults(func=cmd_ingest)
     return parser
 
 
