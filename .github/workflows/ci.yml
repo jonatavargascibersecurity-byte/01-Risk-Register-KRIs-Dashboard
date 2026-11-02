@@ -24,8 +24,8 @@ jobs:
         run: python -m pytest
       - name: Build artefacts
         run: |
-          python -m riskregister report --out build
-          python -m riskregister dashboard --out build
+          python -m riskregister --out build report
+          python -m riskregister --out build dashboard
           python -m riskregister challenge --list
           python -m riskregister --out build ingest --source labs/findings.sample.csv
       - uses: actions/upload-artifact@v4

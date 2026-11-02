@@ -38,8 +38,8 @@ python -m riskregister validate  # checagens de qualidade de dados
 python -m riskregister summary   # resumo de uma página
 python -m riskregister risks --top 10
 python -m riskregister kri
-python -m riskregister report    --out build
-python -m riskregister dashboard --out build
+python -m riskregister --out build report
+python -m riskregister --out build dashboard
 python -m riskregister challenge --list
 python -m riskregister --out build challenge --scenario risk-triage-thm --show-solution
 ```
