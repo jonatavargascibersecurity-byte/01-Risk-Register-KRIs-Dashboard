@@ -25,7 +25,7 @@ Vagas de GRC de entrada pedem candidatos que saibam: construir um registro de ri
 | **Catálogo de controles** | 18 controles com referências de framework (ISO 27001 Anexo A, NIST CSF, PCI-DSS) e eficácia |
 | **Motor de KRIs** | 12 indicadores com direção, limiares e tendência período a período |
 | **Verificações de qualidade** | Referências quebradas, controles órfãos, escalas inválidas, limiares errados, vínculos obsoletos |
-| **Relatórios** | Relatório executivo em Markdown + dashboard HTML, ambos gerados de forma determinística |
+| **Relatórios** | Relatório executivo em Markdown + dashboard HTML, ambos derivados do mesmo CSV e identificados pelo fingerprint SHA-256 |
 | **Reprodutibilidade** | Fingerprint SHA-256 dos CSV de origem impresso em todo relatório |
 
 ## Início rápido

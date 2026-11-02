@@ -4,13 +4,13 @@ Este repositório foi pensado para gerar **evidência prática** ao estudar em t
 
 ## Mapeamento direto
 
-| Plataforma / Trilha / Sala | Foco | Como este repo se relaciona | Como foi/será aplicado |
+| Plataforma / Trilha / Sala | Foco | Como este repo se relaciona | Como foi aplicado (evidência) |
 |---|---|---|---|
-| [TryHackMe - Governance & Regulation](https://tryhackme.com/room/cybergovernanceregulation) | Governança, leis/regulamentos, GRC framework | Casamento direto com o modelo de governança, apetite de risco e reporte executivo. | Usar o registro de riscos para mapear componentes do framework GRC (Governança/Risco/Conformidade) e documentar decisões no relatório. |
-| [TryHackMe - Threats & Risks (Risk Management)](https://tryhackme.com/module/threats-and-risks) | Identificar/avaliar/responder/monitorar riscos | Scoring 5x5, apetite, KRIs com thresholds e priorização. | Aplicar o ciclo `Identify → Assess → Respond → Monitor` aos riscos reais do CSV e justificar priorização com base em `residual_score` e apetite. |
-| [LetsDefend - SOC Manager Path](https://app.letsdefend.io/training) | Triage, avaliação, escalonamento, documentação | Gera artefatos prontos para reporte (executivo + dashboard). | Transformar lições de triage em entradas do registro (cenários, tratamentos) e usar o formato de relatório para incidentes simulados. |
-| [HTB Academy - SOC Analyst Path](https://academy.hackthebox.com/path/preview/soc-analyst) | Detecção/forense/relatórios | Relatórios seguem estrutura próxima a "Security Incident Reporting". | Adaptar relatório executivo para incluir timeline, evidências, impacto e recomendações - alinhado ao módulo de incident reporting. |
-| [HTB - Governance & Compliance](https://www.hackthebox.com/cybersecurity-resources/governance_compliance) | DORA, NIST CSF 2.0, PCI-DSS | Base para enriquecer mapeamentos entre frameworks. | Cruzar controles/requisitos com os riscos/KRIs e registrar gaps no contexto de regulamentações aplicáveis. |
+| [TryHackMe - Governance & Regulation](https://tryhackme.com/room/cybergovernanceregulation) | Governança, leis/regulamentos, GRC framework | Casamento direto com o modelo de governança, apetite de risco e reporte executivo. | Cenário `risk-triage-thm` (`scenarios/risk-triage-thm.json`) responde apetite por categoria e priorização por residual; achado `LF-001` em `labs/findings.sample.csv` registra a sala e o artefato. |
+| [TryHackMe - Threats & Risks (Risk Management)](https://tryhackme.com/module/threats-and-risks) | Identificar/avaliar/responder/monitorar riscos | Scoring 5x5, apetite, KRIs com thresholds e priorização. | O comando `challenge` aplica `Identify → Assess → Respond → Monitor` sobre o CSV real e justifica a ordem com `residual_score` + apetite (Q1/Q2/Q6). |
+| [LetsDefend - SOC Manager Path](https://app.letsdefend.io/training) | Triage, avaliação, escalonamento, documentação | Gera artefatos prontos para reporte (executivo + dashboard). | Cenário `kri-monitoring-letsdefend` cobre thresholds/KRIs; achado `LF-002` liga a trilha ao risco `R-003` e ao artefato gerado. |
+| [HTB Academy - SOC Analyst Path](https://academy.hackthebox.com/path/preview/soc-analyst) | Detecção/forense/relatórios | Relatórios seguem estrutura próxima a "Security Incident Reporting". | Achado `LF-003` liga a trilha a `R-002`; `report`/`dashboard` registram tratamento, dono, prazo e status por risco. |
+| [HTB - Governance & Compliance](https://www.hackthebox.com/cybersecurity-resources/governance_compliance) | DORA, NIST CSF 2.0, PCI-DSS | Base para enriquecer mapeamentos entre frameworks. | O crosswalk ISO Anexo A → SOC 2 / NIST CSF 2.0 / DORA / LGPD é gerado no repositório 02 e serve de vocabulário para os `framework_ref` dos controles deste registro. |
 
 ## Como usar para benefício duplo
 
@@ -25,4 +25,4 @@ Este repositório foi pensado para gerar **evidência prática** ao estudar em t
 - [x] Estrutura base (risks/controls/kris/appetite) alinhada a Risk Management
 - [x] `scenarios/` + comando `challenge` (Fase 2) - respostas calculadas do CSV
 - [x] `ingest` para achados de laboratório + template em `learning-log/` (Fases 5-6)
-- [ ] Metadados do GitHub (description/topics) atualizados via `gh repo edit`
+- [x] Metadados do GitHub (description/topics) atualizados via API: *Risk register + KRI dashboard in pure Python/CSV with playable TryHackMe/LetsDefend challenges and lab-findings ingest*; topics `grc`, `risk-management`, `kri`, `iso-27001`, `nist-csf`, `dora`, `lgpd`, `tryhackme`, `letsdefend`, `hackthebox`, `python`, `portfolio`

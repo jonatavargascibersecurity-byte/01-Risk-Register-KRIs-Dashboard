@@ -2,8 +2,9 @@
 
 The report is the artefact a CISO actually reads: what the exposure is, where
 it breaches the approved appetite, which indicators are off-target and what
-is planned. It is generated deterministically from the CSV files so that it
-can be attached to a committee pack and diffed between periods.
+is planned. It is generated from the CSV files and identified by a SHA-256
+fingerprint so it can be attached to a committee pack and diffed between
+periods.
 """
 
 from __future__ import annotations
