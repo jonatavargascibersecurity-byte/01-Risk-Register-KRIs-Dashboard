@@ -52,13 +52,13 @@ Sem dependências de terceiros em tempo de execução - apenas a biblioteca padr
 
 Este repositório é um laboratório de prática para trilhas de GRC e defesa. Cada sala/trilha vira uma melhoria rastreável; o mapeamento completo (plataforma, link, artefato e o que foi resolvido) está em [`PLATFORMS.md`](PLATFORMS.md).
 
-| Plataforma / trilha | Link | Como o repositório aplica |
+| Plataforma / conteúdo real | Link | Como o repositório aplica |
 |---|---|---|
-| TryHackMe - Governance & Regulation | [sala](https://tryhackme.com/room/cybergovernanceregulation) | Apetite por categoria, priorização por risco residual e relatório orientado a evidências. Cenário `risk-triage-thm`. |
-| TryHackMe - Threats & Risks | [módulo](https://tryhackme.com/module/threats-and-risks) | Ciclo identificar → avaliar → responder → monitorar exercitado no comando `challenge`. |
-| LetsDefend - SOC Manager Path | [trilha](https://app.letsdefend.io/training) | Triage e escalonamento viram perguntas de KRI no cenário `kri-monitoring-letsdefend`. |
-| HTB Academy - SOC Analyst Path | [trilha](https://academy.hackthebox.com/path/preview/soc-analyst) | Estrutura de relatório com evidências e KRIs operacionais. |
-| HTB - Governance & Compliance | [recursos](https://www.hackthebox.com/cybersecurity-resources/governance_compliance) | DORA/NIST CSF 2.0 no catálogo de controles e no crosswalk do repositório 02. |
+| **TryHackMe — Governance & Regulation** (sala) | [sala](https://tryhackme.com/room/cybergovernanceregulation) | Apetite por categoria, priorização por risco residual e relatório orientado a evidências. Cenário `risk-triage-thm`. |
+| **TryHackMe — Risk Management** (sala) | [sala](https://tryhackme.com/room/seriskmanagement) | Ciclo identificar → avaliar → responder → monitorar exercitado no comando `challenge`. |
+| **LetsDefend — Incident Triage, Assessment and Escalation** (curso) | [curso](https://app.letsdefend.io/training/lessons/incident-triage-assessment-and-escalation) | Triage e escalonamento viram perguntas de KRI no cenário `kri-monitoring-letsdefend`. |
+| **HTB Academy — Security Incident Reporting** (módulo) | [módulo](https://academy.hackthebox.com/course/preview/security-incident-reporting) | Estrutura de relatório com evidências e KRIs operacionais. |
+| **HTB Academy — Information Security Guidelines** (módulo) | [módulo](https://academy.hackthebox.com/course/preview/information-security-guidelines) | DORA/NIST CSF 2.0 no catálogo de controles e no crosswalk do repositório 02. |
 
 ### Modo desafio
 

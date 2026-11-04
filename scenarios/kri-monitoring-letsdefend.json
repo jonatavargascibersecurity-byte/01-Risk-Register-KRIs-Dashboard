@@ -2,8 +2,8 @@
   "id": "kri-monitoring-letsdefend",
   "title": "Monitoramento de KRIs e apetite em operacao",
   "platform": "LetsDefend",
-  "path": "SOC Manager Path -> Incident Triage, Assessment and Escalation",
-  "url": "https://app.letsdefend.io/training",
+  "path": "Incident Triage, Assessment and Escalation",
+  "url": "https://app.letsdefend.io/training/lessons/incident-triage-assessment-and-escalation",
   "briefing": "Cenario de operacao: o SOC reportou variacao em indicadores e o comite quer saber o que esta fora do apetite. Responda usando os KRIs e o registro de riscos da Meridian Pay. O objetivo e separar 'existe risco' de 'risco acima do apetite'.",
   "questions": [
     {

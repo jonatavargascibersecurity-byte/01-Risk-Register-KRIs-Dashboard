@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import csv
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 
 from .models import (
@@ -20,7 +21,7 @@ from .models import (
     KRI,
     Risk,
 )
-from .scales import LEVEL_ORDER, exceeds_appetite
+from .scales import LEVEL_ORDER, SCALE_MAX, SCALE_MIN, exceeds_appetite
 
 RISK_FIELDS = [
     "id",
@@ -164,13 +165,37 @@ class Registry:
                     f"{risk.id}: appetite category '{risk.appetite_ref}' not defined"
                 )
 
-            if risk.residual_score > risk.inherent_score:
+            scale_ok = True
+            for field_name in (
+                "inherent_likelihood",
+                "inherent_impact",
+                "residual_likelihood",
+                "residual_impact",
+            ):
+                value = getattr(risk, field_name)
+                if not SCALE_MIN <= value <= SCALE_MAX:
+                    issues.append(
+                        f"{risk.id}: {field_name} must be between "
+                        f"{SCALE_MIN} and {SCALE_MAX} (got {value})"
+                    )
+                    scale_ok = False
+
+            if scale_ok and risk.residual_score > risk.inherent_score:
                 issues.append(
                     f"{risk.id}: residual score is higher than inherent score"
                 )
 
             if not risk.treatment.strip():
                 issues.append(f"{risk.id}: treatment plan is empty")
+
+            if not risk.status.strip():
+                issues.append(f"{risk.id}: status is empty")
+
+            for field_name in ("target_date", "last_review"):
+                try:
+                    date.fromisoformat(getattr(risk, field_name))
+                except ValueError:
+                    issues.append(f"{risk.id}: {field_name} must be YYYY-MM-DD")
 
         seen_control_ids: set[str] = set()
         for control in self.controls:
@@ -186,6 +211,11 @@ class Registry:
                 issues.append(
                     f"{control.id}: unknown effectiveness '{control.effectiveness}'"
                 )
+            for field_name in ("last_tested", "next_review"):
+                try:
+                    date.fromisoformat(getattr(control, field_name))
+                except ValueError:
+                    issues.append(f"{control.id}: {field_name} must be YYYY-MM-DD")
 
         orphan_controls = control_ids - {
             cid for risk in self.risks for cid in risk.control_ids
